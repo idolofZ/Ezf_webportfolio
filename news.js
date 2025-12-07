@@ -15,29 +15,29 @@ const refreshCursorTriggers = () => {
 
 const newsItems = [
     { 
-        date: '2025.05.20', 
-        category: 'EXHIBITION', 
-        title_en: 'SOLO SHOW: "PAIN IS BEAUTY" @ ROPPONGI VOID GALLERY',
-        title_ja: '個展：「痛みは美」@ 六本木VOIDギャラリー'
-    },
-    { 
-        date: '2025.04.01', 
+        date: '2025.XX.XX', 
         category: 'RELEASE', 
-        title_en: 'DROPPED NFT COLLECTION "DIGITAL SCARS" - SOLD OUT IN 3 SECONDS',
-        title_ja: 'NFTコレクション「DIGITAL SCARS」ドロップ - 3秒で完売'
+        title_en: 'DROPPED MIXTAPE "REIGEN -2026"',
+        title_ja: 'MIXTAPE "REIGEN -2026" をドロップ'
     },
     { 
-        date: '2025.03.15', 
-        category: 'MEDIA', 
-        title_en: 'INTERVIEW WITH WIRED JAPAN: "WHY I HATE MINIMALISM"',
-        title_ja: 'WIRED JAPAN インタビュー：「なぜ私はミニマリズムを憎むのか」'
+        date: '2025.12.08', 
+        category: 'UPDATE', 
+        title_en: 'Finally launched my portfolio site',
+        title_ja: 'ポートフォリオサイトを公開'
     },
-    { 
-        date: '2025.02.28', 
-        category: 'SYSTEM', 
-        title_en: 'WEBSITE RENEWAL COMPLETE. WELCOME TO THE CHAOS.',
-        title_ja: 'ウェブサイトリニューアル完了。カオスへようこそ。'
-    },
+    // { 
+    //     date: '2025.03.15', 
+    //     category: 'MEDIA', 
+    //     title_en: 'INTERVIEW WITH WIRED JAPAN: "WHY I HATE MINIMALISM"',
+    //     title_ja: 'WIRED JAPAN インタビュー：「なぜ私はミニマリズムを憎むのか」'
+    // },
+    // { 
+    //     date: '2025.02.28', 
+    //     category: 'SYSTEM', 
+    //     title_en: 'WEBSITE RENEWAL COMPLETE. WELCOME TO THE CHAOS.',
+    //     title_ja: 'ウェブサイトリニューアル完了。カオスへようこそ。'
+    // },
 ];
 
 // --- RENDER NEWS ---
