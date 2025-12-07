@@ -15,7 +15,7 @@ const refreshCursorTriggers = () => {
 
 const newsItems = [
     { 
-        date: '2025.01.XX', 
+        date: '2026.01.XX', 
         category: 'RELEASE', 
         title_en: 'DROPPED MIXTAPE "REIGEN -2026"',
         title_ja: 'MIXTAPE "REIGEN -2026" をドロップ'
