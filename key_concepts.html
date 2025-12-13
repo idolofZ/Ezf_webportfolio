@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KEY CONCEPTS | EREN Z 大翔</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;family=Noto+Sans+JP:wght@100;400;700;900&amp;display=swap"
+        rel="stylesheet">
+
+    <!-- Import Map for Three.js and Google GenAI -->
+    <script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "@google/genai": "https://esm.run/@google/genai"
+  }
+}
+</script>
+
+    <style>
+        :root {
+            --neon-pink: #FF00FF;
+            --neon-blue: #00FFFF;
+            --bg-dark: #050505;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #ffffff;
+            font-family: 'Noto Sans JP', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+            margin: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-display {
+            font-family: 'Syncopate', sans-serif;
+        }
+
+        .font-mono {
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* Custom Scrollbar for Page & Modal */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-blue);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: var(--neon-pink);
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            #cursor {
+                display: none !important;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            .hover-trigger {
+                cursor: pointer;
+            }
+        }
+
+        #cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neon-blue);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            mix-blend-mode: difference;
+            transition: width 0.3s, height 0.3s, background-color 0.3s, border-color 0.3s;
+        }
+
+        #cursor.active {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(255, 0, 255, 0.2);
+            border-color: var(--neon-pink);
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 40;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .neon-text {
+            position: relative;
+            color: white;
+            z-index: 10;
+            display: inline-block;
+        }
+
+        .neon-text::before {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-pink), var(--neon-blue));
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: blur(10px);
+            opacity: 0.8;
+            animation: gradientFlow 4s ease infinite;
+            transition: all 0.3s ease;
+        }
+
+        .neon-text:hover::before {
+            filter: blur(15px);
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        @keyframes gradientFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        .hover-trigger {
+            cursor: none;
+        }
+
+        @media (hover: none) {
+            .hover-trigger {
+                cursor: pointer;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="cursor"></div>
+    <div class="noise"></div>
+    <div id="canvas-container" class="fixed top-0 left-0 w-full h-full -z-10 bg-[#050505]"
+        style="pointer-events: none;"></div>
+
+    <!-- Navigation -->
+    <nav
+        class="fixed top-0 left-0 w-full z-50 mix-blend-difference px-6 py-6 flex justify-between items-center text-white pointer-events-none">
+        <div onclick="window.location.href='index.html'" class="pointer-events-auto cursor-pointer hover-trigger z-50">
+            <h1 class="font-display font-bold text-xl md:text-2xl tracking-widest">
+                EREN Z <span class="">大翔</span>
+            </h1>
+        </div>
+
+        <div class="flex items-center gap-8 pointer-events-auto z-50">
+            <ul class="flex-row gap-8 text-sm font-sans tracking-widest font-bold hidden md:flex">
+                <li><a href="index.html#news" class="hover:text-[#00FFFF] transition-colors hover-trigger"
+                        data-i18n="nav_news">NEWS</a></li>
+                <li><a href="concepts.html" class="text-[#FF00FF] transition-colors hover-trigger"
+                        data-i18n="nav_concepts">KEY CONCEPTS</a></li>
+                <li><a href="index.html#works" class="hover:text-[#00FFFF] transition-colors hover-trigger"
+                        data-i18n="nav_works">WORKS</a></li>
+                <li><a href="index.html#life-plan" class="hover:text-[#00FFFF] transition-colors hover-trigger"
+                        data-i18n="nav_life">LIFE PLAN</a></li>
+            </ul>
+
+            <button id="lang-toggle"
+                class="border border-white px-3 py-1 font-display font-bold text-xs hover:bg-white hover:text-black transition-colors hover-trigger">
+                EN / JP
+            </button>
+
+            <button id="mobile-menu-btn"
+                class="md:hidden text-white font-display font-bold text-sm tracking-widest hover:text-[#00FFFF] hover-trigger flex items-center gap-2">
+                <span id="mobile-btn-text">MENU</span>
+                <span class="text-xl leading-none">Ξ</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 bg-black/95 z-40 flex flex-col justify-center items-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <ul class="flex flex-col gap-10 text-center font-display text-2xl font-bold tracking-widest">
+            <li><a href="index.html#news" class="hover:text-[#00FFFF] transition-colors text-white"
+                    data-i18n="nav_news">NEWS</a></li>
+            <li><a href="concepts.html" class="hover:text-[#00FFFF] transition-colors text-white"
+                    data-i18n="nav_concepts">KEY CONCEPTS</a></li>
+            <li><a href="index.html#works" class="hover:text-[#00FFFF] transition-colors text-white"
+                    data-i18n="nav_works">WORKS</a></li>
+            <li><a href="index.html#life-plan" class="hover:text-[#00FFFF] transition-colors text-white"
+                    data-i18n="nav_life">LIFE PLAN</a></li>
+        </ul>
+    </div>
+
+    <!-- MODAL POPUP -->
+    <div id="concept-modal"
+        class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4 md:p-8">
+        <div
+            class="max-w-3xl w-full bg-[#050505] border-2 border-white relative shadow-[0_0_50px_rgba(255,255,255,0.1)] flex flex-col max-h-[90vh]">
+
+            <!-- Modal Header -->
+            <div class="flex justify-between items-start p-6 md:p-8 border-b border-gray-800">
+                <h2 id="modal-title" class="text-3xl md:text-5xl font-black font-display text-white neon-text"
+                    data-text="">TITLE</h2>
+                <button onclick="closeModal()"
+                    class="text-white hover:text-[#FF00FF] font-mono text-xl md:text-2xl hover-trigger transition-colors font-bold z-50">
+                    [CLOSE]
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 md:p-8 overflow-y-auto custom-scrollbar">
+                <div id="modal-content" class="text-gray-300 font-sans text-base md:text-lg leading-relaxed space-y-6">
+                    <!-- Content injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="pt-32 pb-20">
+        <section class="min-h-screen px-6 md:px-20 max-w-5xl mx-auto">
+
+            <header class="mb-24 text-center">
+                <h2 class="text-5xl md:text-8xl font-black mb-4 font-display">
+                    <span class="neon-text" data-text="KEY CONCEPTS">KEY CONCEPTS</span>
+                </h2>
+            </header>
+
+            <div class="space-y-16">
+                <!-- Concept 1 -->
+                <div
+                    class="border-l-4 border-[#FF00FF] pl-8 py-4 hover:bg-white/5 transition-colors duration-500 group relative">
+                    <div
+                        class="absolute right-0 top-0 opacity-0 group-hover:opacity-20 text-[#FF00FF] font-display text-8xl font-black pointer-events-none select-none transition-opacity">
+                        01</div>
+                    <h3
+                        class="text-4xl md:text-6xl font-black mb-4 text-white font-display group-hover:text-[#FF00FF] transition-colors relative z-10" data-i18n="concept_1_title">
+                        中二病</h3>
+                    <p class="text-gray-400 font-sans text-lg mb-8 max-w-2xl" data-i18n="concept_1_short">
+                        一般的には揶揄として使われ、誇大な妄想や過度な自信を持った人を指すこの言葉を、日本の文化や現代社会、Z世代の文脈を通して再解釈し、この時代に新たな生き方の指針として提示する。これには自分の人生経験を通した自分の「生き方」や「生きる価値・意味・意義」への強い執着が元にある。
+                    </p>
+                    <button onclick="openModal('1')"
+                        class="border border-white px-6 py-3 text-sm font-display font-bold tracking-widest hover:bg-[#FF00FF] hover:border-[#FF00FF] hover:text-white transition-colors duration-300 hover-trigger group inline-flex items-center gap-2"
+                        data-i18n="read_full">
+                        READ FULL TEXT <span class="group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                </div>
+
+                <!-- Concept 2 -->
+                <div
+                    class="border-l-4 border-[#00FFFF] pl-8 py-4 hover:bg-white/5 transition-colors duration-500 group relative">
+                    <div
+                        class="absolute right-0 top-0 opacity-0 group-hover:opacity-20 text-[#00FFFF] font-display text-8xl font-black pointer-events-none select-none transition-opacity">
+                        02</div>
+                    <h3
+                        class="text-4xl md:text-6xl font-black mb-4 text-white font-display group-hover:text-[#00FFFF] transition-colors relative z-10" data-i18n="concept_2_title">
+                        イタい</h3>
+                    <p class="text-gray-400 leading-relaxed" data-i18n="concept_2_short">
+                        自分を過剰に信じる人は他者から「イタい」という視線で見られ、嘲笑や冷笑の対象になる。
+                        私はこのイタさを積極的に受け入れ、その姿勢を貫き奨励していく事を目指す。
+                        他者から「イタい」と思われる恐怖に立ち向かい、自分を信じること、そんなイタさを提示したい。
+                    </p>
+                    <button onclick="openModal('2')"
+                        class="border border-white px-6 py-3 text-sm font-display font-bold tracking-widest hover:bg-[#00FFFF] hover:border-[#00FFFF] hover:text-black transition-colors duration-300 hover-trigger group inline-flex items-center gap-2"
+                        data-i18n="read_full">
+                        READ FULL TEXT <span class="group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                </div>
+
+                <!-- Concept 3 -->
+                <!-- <div
+                    class="border-l-4 border-white pl-8 py-4 hover:bg-white/5 transition-colors duration-500 group relative">
+                    <div
+                        class="absolute right-0 top-0 opacity-0 group-hover:opacity-20 text-white font-display text-8xl font-black pointer-events-none select-none transition-opacity">
+                        03</div>
+                    <h3
+                        class="text-4xl md:text-6xl font-black mb-4 text-white font-display group-hover:text-gray-500 transition-colors relative z-10">
+                        THE EGO</h3>
+                    <p class="text-gray-400 font-sans text-lg mb-8 max-w-2xl" data-i18n="concept_3_short">
+                        Art without ego is just decoration.
+                    </p>
+                    <button onclick="openModal('3')"
+                        class="border border-white px-6 py-3 text-sm font-display font-bold tracking-widest hover:bg-white hover:text-black transition-colors duration-300 hover-trigger group inline-flex items-center gap-2"
+                        data-i18n="read_full">
+                        READ FULL TEXT <span class="group-hover:translate-x-1 transition-transform">→</span>
+                    </button>
+                </div> -->
+
+            </div>
+        </section>
+
+                <!-- Footer -->
+        <footer class="py-20 text-center border-t border-gray-800 pb-32">
+            <h2 class="glowing-heading text-6xl md:text-9xl font-display font-black opacity-30 text-center">EREN Z 大翔</h2>
+            <p class="mt-8 text-sky-blue font-sans">SNS</p>
+            <!-- Footer -->
+             <div class="container mx-auto px-6 text-center">
+                <div class="flex justify-center gap-6 md:gap-8 mb-12">
+                    <a href="https://www.instagram.com/chunibyost4r/"
+                        class="p-4 border border-zinc-700 rounded-full hover:bg-cyan-400 hover:text-black hover:border-cyan-400 transition-all duration-300 hover-trigger text-xs md:text-base">Instagram</a>
+                    <a href="https://x.com/chunibyostvr"
+                        class="p-4 border border-zinc-700 rounded-full hover:bg-fuchsia-500 hover:text-black hover:border-fuchsia-500 transition-all duration-300 hover-trigger text-xs md:text-base">X</a>
+                    <a href="https://www.tiktok.com/@chunibyostvr?is_from_webapp=1&sender_device=pc"
+                        class="p-4 border border-zinc-700 rounded-full hover:bg-white hover:text-black hover:border-white transition-all duration-300 hover-trigger text-xs md:text-base">TikTok</a>
+                </div>
+                <div class="text-zinc-500 text-[10px] md:text-xs tracking-widest font-mono">
+                    <p>&copy; 2025 EREN Z 大翔. ALL RIGHTS RESERVED.</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { GoogleGenAI } from "@google/genai";
+
+        // Mobile Menu
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        let isMenuOpen = false;
+        mobileBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+                mobileMenu.classList.add('opacity-100', 'pointer-events-auto');
+                document.getElementById('mobile-btn-text').innerText = 'CLOSE';
+            } else {
+                mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+                mobileMenu.classList.remove('opacity-100', 'pointer-events-auto');
+                document.getElementById('mobile-btn-text').innerText = 'MENU';
+            }
+        });
+
+        // Translations & Data
+        let currentLang = 'JA';
+
+        const conceptData = {
+            '1': {
+                title: {
+                    JA: '中二病',
+                    EN: 'Chunibyo'
+                },
+                JA: {
+                    short: '一般的には揶揄として使われ、誇大な妄想や過度な自信を持った人を指すこの言葉を、日本の文化や現代社会、Z世代の文脈を通して再解釈し、この時代に新たな生き方の指針として提示する。これには自分の人生経験を通した自分の「生き方」や「生きる価値・意味・意義」への強い執着が元にある。',
+                    full: '私は中二病を単なるイタくて恥ずかしい様子ではなく、生き方など実存的問いを投げかけるものとして期待している。これには自分の人生経験を通した自分の「生き方」や「生きる価値・意味・意義」への強い執着が元にある。私は中学の頃、いじめられていた。何度も自殺をしようとし、包丁を自分に向けた事もあった。そしてそんな頃、度々読み返していた「進撃の巨人」のエレンのセリフ「戦え、戦え、戦わなければ勝てない」「それじゃまるで家畜じゃないか」というセリフに心が打たれた。何度も自殺を考えた私は、このセリフを受けて、絶対に戦って生きる事を誓った。それ以来、私は自分自身の生きる意味や価値について深く向き合うようになり、それは他者も含めて人の生き方に拘るようになった。思えば、それ以前から私はずっと漫画やアニメのキャラクターから沢山の希望や夢をもらい、生き方に影響を受けてきた。小さい頃はイナズマイレブンを観てサッカーが大好きになり、バカ真面目に必殺技を練習したり、本気で世界を目指したりしていた。今でも、「鬼滅の刃」や「僕のヒーローアカデミア」、「ブルーロック」など数々の作品に心を打たれ、本気で生き方に影響を与えてもらっている。こういった日本のアニメ/漫画は日本だけでなく、世界でも多くの方々に影響を与えており、スポーツ選手やミュージシャンなどでも日本のアニメに影響を受けたと言及する人がいる。このように日本のアニメ/漫画カルチャーは正しく現代の「聖書」とも言える。そんなアニメや漫画のフィ現代は様々な情報に溢れ多様な生き方が認められる一方、その多様さ故に自分自身の生き方を見失いがちだ。更にやっと見つけた自分の生き方も他者から嘲笑され冷笑文化が育ってしまっている。その上で、中二病を通して自身の生き方を追い求め実現する姿勢の尊さを提示し、どんな生き方をすべきかという根源に迫る実存的問いを突きつける。中二病を描く事は、私の生に関するリアルを描く事だ。'
+                },
+                EN: {
+                    short: "Although generally used as a derogatory term referring to those with grandiose delusions or excessive confidence, I reinterpret this word through the context of Japanese culture, modern society, and Generation Z, presenting it as a new guideline for living in this era. This is rooted in a strong obsession with my own 'way of life' and the 'value, meaning, and significance of living,' derived from my personal life experiences.",
+                    full: "I look to 'Chuunibyou' (Middle-school 2nd Year Syndrome) not merely as an embarrassing, 'cringe' state, but as something that poses existential questions about ways of living. This is rooted in a profound obsession with my own 'way of living' and the 'value, meaning, and significance of life,' derived from my personal life experiences.\n\nI was bullied in junior high school. I attempted suicide multiple times, and there were times I even turned a knife on myself. During that period, I was struck by the lines of Eren from 'Attack on Titan,' which I read repeatedly: 'Fight, fight. If you don't fight, you can't win,' and 'At this rate, we'll just be cattle.' Having contemplated suicide many times, these words inspired me to vow to fight and live no matter what. Since then, I began to deeply face the meaning and value of my own life, leading to a fixation on the way people live, including others.\n\nCome to think of it, even before that, I had always received hope and dreams from manga and anime characters, influencing my way of life. As a child, I watched 'Inazuma Eleven' and loved soccer, earnestly practicing 'special moves' and seriously aiming for the world stage. Even now, I am moved by numerous works such as 'Demon Slayer,' 'My Hero Academia,' and 'Blue Lock,' and they seriously influence how I live. These Japanese anime/manga works influence not only people in Japan but many around the world; even athletes and musicians mention being influenced by Japanese anime. Thus, Japanese anime/manga culture can truly be called the modern 'Bible.'\n\nWhile modern times are overflowing with information and diverse ways of living are accepted, that very diversity makes it easy to lose sight of one's own way of life. Furthermore, even when one finally finds their way, it is often ridiculed by others, fostering a culture of cynicism. In this context, through 'Chuunibyou,' I present the preciousness of the stance of pursuing and realizing one's own way of life, thrusting forward the existential question of how one should live. To depict Chuunibyou is to depict the reality of my life."
+                }
+            },
+            '2': {
+                title: {
+                    JA: 'イタい',
+                    EN: 'Itai'
+                },
+                JA: {
+                    short: '自分を過剰に信じる人は他者から「イタい」という視線で見られ、嘲笑や冷笑の対象になる。私はこのイタさを積極的に受け入れ、その姿勢を貫き奨励していく事を目指す。他者から「イタい」と思われる恐怖に立ち向かい、自分を信じること、そんなイタさを提示したい。',
+                    full: '中二病に関して「イタい」という言葉がある。自分を過剰に信じる人は他者から「イタい」という視線で見られ、嘲笑の対象になる。これには日本の同調圧力的な空気感が読み取れる。しかし、私はこのイタさを積極的に受け入れ、その姿勢を貫き奨励していく事を目指す。そして私にとってこのイタさは生存戦略でもある。自分は世界から嫌われているという考えがある。だからこそ、過度にも自分を信じ続けビッグマウスになることで、世界にとって必要な存在になろうという思いがある。このイタいという他者からの視線に対する恐怖は、人生の可能性を縛る。昨今の冷笑系という他者を嘲笑することを喜びとする人達が、幅を利かせている現状がとても心苦しい。そんな世の中で私が率先して、他者から「イタい」と思われる恐怖に立ち向かい、自分を信じること、イタさを提示することを提示したい。イタさに向き合うことは、自分の生き方と向き合うのと同じ'
+                },
+                EN: {
+                    short: "People who believe in themselves excessively are viewed with a gaze of 'Itai' (cringe) by others, becoming targets of ridicule and sneers. I aim to actively embrace this 'Itasa,' maintaining this stance and encouraging it. I want to confront the fear of being seen as 'cringe' and present the act of believing in oneself—that very 'Itasa'—as a new proposal.",
+                    full: "Regarding 'Chuunibyou,' there is the word 'Itai' (cringe). People who believe in themselves excessively are viewed with 'cringe' eyes by others and become targets of ridicule. One can read the stifling air of Japanese peer pressure in this. However, I aim to actively embrace this 'Itasa,' maintain that stance, and encourage it. For me, this 'Itasa' is also a survival strategy. I have this idea that I am hated by the world. That is precisely why, by continuing to believe in myself—even excessively—and becoming a 'big mouth,' I harbor the desire to become an existence that is necessary to the world. The fear of this gaze from others—this feeling of being 'Itai'—binds the possibilities of life. I find the current prevalence of cynical people, who find joy in mocking others, to be truly painful. In such a world, I want to take the lead in confronting the fear of being thought of as 'Itai,' and present the true power of believing in oneself. Facing 'Itasa' is the same as facing one's own way of living."}
+            },
+            '3': {
+                title: {
+                    JA: 'THE EGO',
+                    EN: 'THE EGO'
+                },
+                JA: {
+                    short: 'Art without ego is just decoration.',
+                    full: '謙虚さを美徳とする時代は終わった。<br><br>アーティストは神にならなければならない。自分の世界を創造し、他者をその世界に引きずり込む引力。それがエゴだ。<br><br>俺の作品を見るんじゃない、俺の生き様を見ろ。このサイトそのものが、俺という宗教の経典だ。批判も称賛も、すべて俺のエゴの燃料に過ぎない。'
+                },
+                EN: {
+                    short: 'Art without ego is just decoration.',
+                    full: 'The era of humility as a virtue is over.<br><br>Artists must become gods. The gravity to create one\u0027s own world and drag others into it. That is Ego.<br><br>Don\u0027t look at my art, look at my way of life. This site itself is the scripture of the religion called Me. Criticism and praise are nothing but fuel for my ego.'
+                }
+            }
+        };
+
+        const staticTranslations = {
+            JA: {
+                nav_news: 'NEWS',
+                nav_concepts: 'KEY CONCEPTS',
+                nav_works: 'WORKS',
+                nav_life: 'LIFE PLAN',
+                read_full: '全文を読む [+]',
+                concept_1_title: '中二病',
+                concept_1_short: '一般的には揶揄として使われ、誇大な妄想や過度な自信を持った人を指すこの言葉を、日本の文化や現代社会、Z世代の文脈を通して再解釈し、この時代に新たな生き方の指針として提示する。これには自分の人生経験を通した自分の「生き方」や「生きる価値・意味・意義」への強い執着が元にある。',
+                concept_2_title: 'イタい',
+                concept_2_short: '自分を過剰に信じる人は他者から「イタい」という視線で見られ、嘲笑や冷笑の対象になる。私はこのイタさを積極的に受け入れ、その姿勢を貫き奨励していく事を目指す。他者から「イタい」と思われる恐怖に立ち向かい、自分を信じること、そんなイタさを提示したい。',
+                footer_title: 'LET\'S COLLABORATE'
+            },
+            EN: {
+                nav_news: 'NEWS',
+                nav_concepts: 'CONCEPTS',
+                nav_works: 'WORKS',
+                nav_life: 'TIMELINE',
+                read_full: 'READ FULL TEXT [+]',
+                concept_1_title: 'Chunibyo',
+                concept_1_short: 'Generally used as a derogatory term to describe someone with delusions of grandeur or excessive confidence, I reinterpret this word through the context of Japanese culture, modern society, and Generation Z, presenting it as a new guiding principle for living in this era. This is rooted in a strong obsession with my own "way of living" and the "value, meaning, and significance of life," derived from my personal life experiences.',
+                concept_2_title: 'Itai',
+                concept_2_short: '自分を過剰に信じる人は他者から「イタい」という視線で見られ、嘲笑や冷笑の対象になる。私はこのイタさを積極的に受け入れ、その姿勢を貫き奨励していく事を目指す。他者から「イタい」と思われる恐怖に立ち向かい、自分を信じること、そんなイタさを提示したい。',
+                footer_title: 'WORK WITH ME'
+            }
+        };
+
+        // --- MODAL LOGIC ---
+        const modal = document.getElementById('concept-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalContent = document.getElementById('modal-content');
+        const modalCursor = document.getElementById('cursor');
+
+        // Make functions globally available for inline onclick handlers
+        window.openModal = (id) => {
+            const data = conceptData[id];
+            if (!data) return;
+
+            const langData = data[currentLang];
+            modalTitle.innerText = data.title[currentLang];
+            modalTitle.setAttribute('data-text', data.title[currentLang]); // Update neon attr
+
+            // Combine short + full for the modal view
+            modalContent.innerHTML = `
+                <p>${langData.full}</p>
+            `;
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modal.classList.add('opacity-100', 'pointer-events-auto');
+        };
+
+        window.closeModal = () => {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modal.classList.remove('opacity-100', 'pointer-events-auto');
+        };
+
+        // Close on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') window.closeModal();
+        });
+
+        // --- TRANSLATION LOGIC ---
+        function updatePageText() {
+            // Update static elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+
+                // Static translations
+                if (staticTranslations[currentLang][key]) {
+                    el.innerHTML = staticTranslations[currentLang][key];
+                }
+
+                // Dynamic Concept Short Descriptions
+                // keys: concept_1_short, concept_2_short...
+                const match = key.match(/concept_(\d)_short/);
+                if (match) {
+                    const id = match[1];
+                    if (conceptData[id]) {
+                        el.innerText = conceptData[id][currentLang].short;
+                    }
+                }
+            });
+        }
+
+        document.getElementById('lang-toggle').addEventListener('click', () => {
+            currentLang = currentLang === 'JA' ? 'EN' : 'JA';
+            updatePageText();
+            document.getElementById('lang-toggle').innerText = currentLang === 'JA' ? 'EN / JP' : 'JP / EN';
+        });
+
+        // --- CURSOR ---
+        const cursorEl = document.getElementById('cursor');
+        document.addEventListener('mousemove', e => {
+            cursorEl.style.left = e.clientX + 'px';
+            cursorEl.style.top = e.clientY + 'px';
+        });
+        document.addEventListener('mouseover', e => {
+            if (e.target.closest('.hover-trigger') || e.target.tagName === 'A' || e.target.tagName === 'BUTTON') {
+                cursorEl.classList.add('active');
+            } else {
+                cursorEl.classList.remove('active');
+            }
+        });
+
+        // --- THREE.JS ---
+        function initThree() {
+            const container = document.getElementById('canvas-container');
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x050505, 0.02);
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 18;
+            camera.position.y = 2;
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            container.appendChild(renderer.domElement);
+
+            const dnaGroup = new THREE.Group();
+            scene.add(dnaGroup);
+
+            // Texture
+            const canvas = document.createElement('canvas');
+            canvas.width = 64; canvas.height = 64;
+            const ctx = canvas.getContext('2d');
+            const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+            grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.6)');
+            grad.addColorStop(0.5, 'rgba(255, 255, 255, 0.1)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 64, 64);
+            const glowTexture = new THREE.CanvasTexture(canvas);
+
+            // Simple DNA
+            const count = 500;
+            const pos = [], col = [];
+            const pink = new THREE.Color(0xFF00FF), cyan = new THREE.Color(0x00FFFF);
+            for (let i = 0; i < count; i++) {
+                const t = i / count;
+                const angle = t * Math.PI * 10;
+                const r = 5;
+                const x = Math.cos(angle) * r;
+                const y = (t * 40) - 20;
+                const z = Math.sin(angle) * r;
+                pos.push(x, y, z);
+                col.push(pink.r, pink.g, pink.b);
+                pos.push(-x, y, -z);
+                col.push(cyan.r, cyan.g, cyan.b);
+            }
+            const geo = new THREE.BufferGeometry();
+            geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+            geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+            const mat = new THREE.PointsMaterial({ size: 0.4, map: glowTexture, vertexColors: true, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false });
+            dnaGroup.add(new THREE.Points(geo, mat));
+
+            dnaGroup.rotation.z = Math.PI / 4;
+
+            function animate() {
+                dnaGroup.rotation.y += 0.002;
+                renderer.render(scene, camera);
+                requestAnimationFrame(animate);
+            }
+            animate();
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+        initThree();
+
+        // --- AI ---
+        const generateBtn = document.getElementById('generate-btn');
+        if (generateBtn) {
+            generateBtn.addEventListener('click', async () => {
+                const output = document.getElementById('ai-output');
+                let apiKey = '';
+                if (typeof process !== 'undefined' && process.env && process.env.API_KEY) {
+                    apiKey = process.env.API_KEY;
+                }
+
+                if (!apiKey) {
+                    output.innerHTML = '<span class="text-red-500">API KEY MISSING.</span>';
+                    return;
+                }
+
+                output.innerHTML = '<span class="text-[#00FFFF] animate-pulse">GENERATING CHAOS...</span>';
+                try {
+                    const ai = new GoogleGenAI({ apiKey: apiKey });
+                    const prompt = currentLang === 'JA'
+                        ? "エゴ、痛み、未来、カオスをテーマにした、ブルータリズム的な短いアーティストのスローガンを生成してください。15単語以内。"
+                        : "Generate a short, intense artist slogan for 'Eren Z'. Themes: Ego, Pain, Future, Chaos. Style: Brutalist. Max 15 words.";
+                    const response = await ai.models.generateContent({ model: 'gemini-2.5-flash', contents: prompt });
+                    output.innerHTML = `<p>"${response.text.trim()}"</p>`;
+                } catch (error) {
+                    console.error(error);
+                    output.innerHTML = '<span class="text-red-500">ERROR</span>';
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>
