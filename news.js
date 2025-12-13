@@ -22,16 +22,16 @@ const newsItems = [
     },
     { 
         date: '2025.12.13', 
-        category: 'UPDATE', 
-        title_en: 'Finally launched my portfolio site',
-        title_ja: 'ポートフォリオサイトを公開'
-    },
-    { 
-        date: '2025.12.13', 
         category: 'RELEASE', 
         title_en: 'Published "Nietzsche AI" on Note.',
         title_ja: 'note「ニーチェAI」公開',
         url: 'https://note.com/chunibyost4r/n/nb6275cba2922?sub_rt=share_pw'
+    },
+    { 
+      date: '2025.12.13', 
+      category: 'UPDATE', 
+      title_en: 'Finally launched my portfolio site',
+      title_ja: 'ポートフォリオサイトを公開'  
     },
     // { 
     //     date: '2025.02.28', 
