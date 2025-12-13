@@ -21,7 +21,7 @@ const newsItems = [
         title_ja: 'MIXTAPE "REIGEN -2026" をドロップ'
     },
     { 
-        date: '2025.12.XX', 
+        date: '2025.12.13', 
         category: 'UPDATE', 
         title_en: 'Finally launched my portfolio site',
         title_ja: 'ポートフォリオサイトを公開'
