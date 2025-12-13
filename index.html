@@ -69,22 +69,26 @@
             <a href="#" class="font-display font-bold text-lg tracking-widest hover-trigger">EREN Z 大翔</a>
         </div>
 
-        <!-- Desktop Menu (Visible on medium screens and up) -->
-        <div class="hidden md:flex items-center gap-8">
-            <div class="space-x-8 font-sans text-sm tracking-widest">
-                <a href="#news" class="hover:text-white transition-colors hover-trigger">NEWS</a>
-                <a href="#concepts" class="hover:text-neon-pink transition-colors hover-trigger">KEY CONCEPTS</a>
-                <a href="#works" class="hover:text-sky-blue transition-colors hover-trigger">WORKS</a>
-                <a href="#life-plan" class="hover:text-neon-pink transition-colors hover-trigger">LIFE PLAN</a>
+        <div class="flex items-center gap-6">
+            <!-- Desktop Menu (Visible on medium screens and up) -->
+            <div class="hidden md:flex items-center gap-8">
+                <div class="space-x-8 font-sans text-sm tracking-widest">
+                    <a href="#news" class="hover:text-white transition-colors hover-trigger">NEWS</a>
+                    <a href="#concepts" class="hover:text-neon-pink transition-colors hover-trigger">KEY CONCEPTS</a>
+                    <a href="#works" class="hover:text-sky-blue transition-colors hover-trigger">WORKS</a>
+                    <a href="#life-plan" class="hover:text-neon-pink transition-colors hover-trigger">LIFE PLAN</a>
+                </div>
             </div>
-            <button id="lang-toggle" class="lang-btn hover-trigger">EN / JP</button>
-        </div>
+            
+            <!-- Language Toggle (Always Visible) -->
+            <button id="lang-toggle" class="lang-btn hover-trigger text-sm">EN / JP</button>
 
-        <!-- Mobile Menu Button (Visible on small screens) -->
-        <div class="md:hidden flex items-center">
-            <button id="mobile-menu-button" class="z-50 hover-trigger">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h16"></path></svg>
-            </button>
+            <!-- Mobile Menu Button (Visible on small screens) -->
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="z-50 hover-trigger">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h16"></path></svg>
+                </button>
+            </div>
         </div>
 
         <!-- Mobile Menu (Hidden by default, toggled with JS) -->
@@ -94,9 +98,6 @@
                 <a href="#concepts" class="block hover:text-neon-pink transition-colors hover-trigger">KEY CONCEPTS</a>
                 <a href="#works" class="block hover:text-sky-blue transition-colors hover-trigger">WORKS</a>
                 <a href="#life-plan" class="block hover:text-neon-pink transition-colors hover-trigger">LIFE PLAN</a>
-            </div>
-            <div class="mt-12">
-                 <button id="lang-toggle-mobile" class="lang-btn hover-trigger">EN / JP</button>
             </div>
         </div>
     </nav>
