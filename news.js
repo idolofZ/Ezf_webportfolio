@@ -15,7 +15,14 @@ const refreshCursorTriggers = () => {
 
 const newsItems = [
     { 
-        date: '2025.01.XX', 
+        date: '2026.02.19', 
+        category: 'LAUNCH', 
+        title_en: 'LAUNCHED GRADUATION PROJECT SITE',
+        title_ja: '卒業制作特設サイト公開', 
+        url: 'graduation_exhibition.html'
+    },
+    { 
+        date: '2026.0X.XX', 
         category: 'RELEASE', 
         title_en: 'DROPPED MIXTAPE "REIGEN -2026"',
         title_ja: 'MIXTAPE "REIGEN -2026" をドロップ'

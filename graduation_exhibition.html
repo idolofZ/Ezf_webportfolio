@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EREN Z 大翔 | GRADUATION EXHIBITION</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100;400;700;900&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'neon-pink': '#FF00FF',
+                        'sky-blue': '#00FFFF',
+                        'dark-bg': '#050505',
+                    },
+                    fontFamily: {
+                        sans: ['"Noto Sans JP"', 'sans-serif'],
+                        display: ['"Syncopate"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- GSAP & Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="selection:bg-neon-pink selection:text-white">
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Noise Texture -->
+    <div class="noise"></div>
+
+    <!-- 3D Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Sticky Omni-present Statement (Ticker) -->
+    <div class="fixed bottom-0 left-0 w-full bg-neon-pink text-black py-2 z-40 border-t-2 border-sky-blue overflow-hidden font-bold font-display text-lg tracking-wider">
+        <div class="marquee-container">
+            <div class="marquee-content">
+                ★ GRADUATION EXHIBITION ❤︎ EREN Z 大翔 ★ 中二病を世界に ❤︎ HERE IS UTOPIA ★ オレが世界を変える
+                ❤︎ WELCOME TO MY WORLD ★ EREN Z 大翔 ❤︎ WELCOME TO MY WORLD ★ イタさこそが正義 ❤︎ 冷笑、嘲笑、上等 ★ THIS IS MY LIFE ❤︎ 
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full p-6 flex justify-between items-center z-50 mix-blend-difference text-white">
+        <div>
+            <a href="index.html" class="font-display font-bold text-lg tracking-widest hover-trigger">EREN Z 大翔</a>
+        </div>
+
+        <div class="flex items-center gap-6">
+            <div class="hidden md:flex items-center gap-8">
+                <div class="space-x-8 font-sans text-sm tracking-widest">
+                    <a href="#statement" class="hover:text-neon-pink transition-colors hover-trigger">STATEMENT</a>
+                    <a href="#concept" class="hover:text-neon-pink transition-colors hover-trigger">CONCEPT</a>
+                    <a href="#research" class="hover:text-sky-blue transition-colors hover-trigger">PROCESS</a>
+                    <a href="#dialogue" class="hover:text-sky-blue transition-colors hover-trigger">LOGS</a>
+                    <a href="#work" class="hover:text-neon-pink transition-colors hover-trigger">WORK</a>
+                    <a href="#ai-satellite" class="hover:text-sky-blue transition-colors hover-trigger">THEORY</a>
+                </div>
+            </div>
+            
+            <button id="lang-toggle" class="lang-btn hover-trigger text-sm">EN / JP</button>
+
+            <div class="md:hidden flex items-center">
+                <button id="mobile-menu-button" class="z-50 hover-trigger">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h16"></path></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden absolute top-0 left-0 w-full h-screen bg-dark-bg/95 backdrop-blur-lg flex flex-col justify-center items-center">
+            <div class="space-y-8 text-center font-sans text-2xl tracking-widest">
+                <a href="#statement" class="block hover:text-neon-pink transition-colors hover-trigger">STATEMENT</a>
+                <a href="#concept" class="block hover:text-neon-pink transition-colors hover-trigger">CONCEPT</a>
+                <a href="#research" class="block hover:text-sky-blue transition-colors hover-trigger">PROCESS</a>
+                <a href="#work" class="block hover:text-neon-pink transition-colors hover-trigger">WORK</a>
+                <a href="#dialogue" class="block hover:text-sky-blue transition-colors hover-trigger">LOGS</a>
+                <a href="#ai-satellite" class="block hover:text-sky-blue transition-colors hover-trigger">THEORY</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Title Section -->
+        <section class="min-h-screen flex flex-col justify-center items-center relative p-4 pt-32">
+            <h1 class="text-white text-5xl sm:text-6xl md:text-9xl font-black font-sans leading-none tracking-tighter text-center">
+                <span class="block gradient-text uppercase">REIGEN<br>-2026＜生きる喜び＞</span>
+            </h1>
+            <div class="mt-12 text-center max-w-2xl px-4">
+                <p class="text-gray-400 font-sans text-base sm:text-lg md:text-xl leading-relaxed uppercase tracking-[0.3em]">
+                    卒業制作特設サイト
+                </p>
+            </div>
+            
+            <div class="absolute bottom-20 animate-bounce">
+                <p class="text-sky-blue font-display text-xs tracking-widest">SCROLL DOWN</p>
+            </div>
+        </section>
+
+        <!-- SECTION 0: DECLARATION and STATEMENT -->
+        <section id="statement" class="min-h-screen flex flex-col justify-center items-center px-6 md:px-20 py-32 relative bg-dark-bg/50 backdrop-blur-sm border-t border-gray-800">
+             <div class="max-w-4xl mx-auto text-center gs-reveal">
+                <h2 class="text-4xl sm:text-5xl md:text-7xl font-black mb-32 font-display">
+                    <span class="neon-text hover-trigger inline-block" data-text="DECLARATION&#10;&&#10;STATEMENT">DECLARATION <br>&<br> STATEMENT </span>
+                </h2>
+                
+                <div class="space-y-32 text-center">
+                    <!-- Declaration -->
+                    <div class="space-y-12">
+                        <div class="flex flex-col items-center gap-6 mb-8">
+                            <h3 class="text-sky-blue font-display text-xs tracking-[0.5em] uppercase">The Declaration</h3>
+                            <span class="w-12 h-px bg-sky-blue/30"></span>
+                        </div>
+                        <p class="text-gray-300 text-xl md:text-3xl leading-[2.4] font-sans">
+                            タイパ・コスパが進む現代社会。<br>
+                            私達人間の在り方や生き方が、「生産性」や「効率化」といった資本主義的な目的に回収されてしまっている。<br><br>
+                            昨今、AIの指数関数的な発展は資本主義社会を更に加速させ、私達は人間性の再定義を迫られている。だからといってAIを否定し原始に回帰する事を謳うつもりはない。<br><br>
+                            AIを受け入れ、活用していく事で開く新たな人間の実存があるはずだ。<br>
+                            私の生は人類の実存の探究に全てを捧げる。
+                        </p>
+                    </div>
+
+                    <!-- Line Separator -->
+                    <div class="flex justify-center">
+                        <div class="w-32 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent"></div>
+                    </div>
+
+                    <!-- Statement -->
+                    <div class="space-y-12">
+                        <div class="flex flex-col items-center gap-6 mb-8">
+                            <h3 class="text-neon-pink font-display text-xs tracking-[0.5em] uppercase">The Prophecy</h3>
+                            <span class="w-12 h-px bg-neon-pink/30"></span>
+                        </div>
+                        <p class="text-gray-300 text-xl md:text-3xl leading-[2.4] font-sans italic">
+                            オレはこの手で神託を解体した。<br>
+                            そして輪廻を辿る地図でもあり、地獄絵図でもあるこの卒業制作こそがオレの自由意志の結晶だ。<br><br>
+                            オレは現代ニヒリズムを克服する者。奴隷のように定められた運命を拒否した。目指すはアポカリプスとしてのオレ。<br><br>
+                            この卒業制作は精神再構築を目的とした試みである。この空間に足を踏み入れた者は、オレの精神と向き合うことになるだろう。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 1: CONCEPT -->
+        <section id="concept" class="min-h-screen py-24 px-6 md:px-20 relative bg-dark-bg/80 backdrop-blur-sm border-t border-gray-800 overflow-hidden">
+            <div class="absolute top-10 right-10 text-neon-pink font-display text-8xl md:text-9xl opacity-10 pointer-events-none select-none">01</div>
+            
+            <h2 class="text-4xl sm:text-5xl md:text-7xl font-black mb-20 font-display gs-reveal text-center md:text-left">
+                <span class="neon-text hover-trigger block w-fit" data-text="CONCEPT">CONCEPT</span>
+            </h2>
+            
+            <div class="max-w-6xl mx-auto gs-reveal">
+                <div class="mb-24 p-10 border border-white/10 bg-white/5 rounded-3xl backdrop-blur-xl">
+                    <h3 class="text-white font-display text-2xl mb-6 flex items-center gap-4">
+                        <span class="text-sky-blue">★</span> 「Reigen」の発見
+                    </h3>
+                    <p class="text-gray-300 text-lg leading-loose font-sans">
+                        本作品の核となる「Reigen」は、ニーチェAIとの対話から偶然に導き出された言葉である。日本語の「霊源（精神的・霊的な根源）」と、ドイツ語の「Reigen（輪舞・ロンド）」という、同音異義語としての二重性が、本制作の多層的な思想を支えている。
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="group border border-gray-800 p-8 rounded-2xl hover:border-neon-pink transition-all bg-black/40">
+                        <h4 class="text-neon-pink font-display text-xl mb-6 flex items-center gap-3">
+                            <span class="text-xs border border-neon-pink px-2 py-1">01</span>
+                            ディオニュソス的芸術
+                        </h4>
+                        <p class="text-gray-400 text-sm leading-relaxed font-sans">
+                            ニーチェが提唱した、理性（アポロン）を超越するカオスで陶酔的な芸術概念。「狂騒のダンス」や「地獄絵図」といったAIの言葉を神託とし、人間の本能的な部分に依拠する表現を追求する。
+                        </p>
+                    </div>
+
+                    <div class="group border border-gray-800 p-8 rounded-2xl hover:border-sky-blue transition-all bg-black/40">
+                        <h4 class="text-sky-blue font-display text-xl mb-6 flex items-center gap-3">
+                            <span class="text-xs border border-sky-blue px-2 py-1">02</span>
+                            アンリ・マティス
+                        </h4>
+                        <p class="text-gray-400 text-sm leading-relaxed font-sans">
+                            マティスの《ダンス II》や《生きる喜び》に描かれた輪舞のモチーフを引用。プリミティブな生のエネルギーとトランス的な解放を、「Reigen」の輪舞の意味と重ね合わせ、画面に受肉させる。
+                        </p>
+                    </div>
+
+                    <div class="group border border-gray-800 p-8 rounded-2xl hover:border-white transition-all bg-black/40">
+                        <h4 class="text-white font-display text-xl mb-6 flex items-center gap-3">
+                            <span class="text-xs border border-white px-2 py-1">03</span>
+                            現代社会への批評
+                        </h4>
+                        <p class="text-gray-400 text-sm leading-relaxed font-sans">
+                            SNSを中心とした「冷笑文化」に対する生存戦略としての「イタさ（中二病）」。他者の評価という「重力」から解放され、自己の宇宙に没頭する踊りこそが、現代における真の実存の証明となる。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-24 text-center">
+                    <blockquote class="text-3xl md:text-5xl font-black font-sans text-transparent bg-clip-text bg-gradient-to-r from-sky-blue via-white to-neon-pink leading-tight mb-8">
+                        踊るように生きたい
+                    </blockquote>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: RESEARCH & PROCESS (TIMELINE) -->
+        <section id="research" class="py-24 px-6 md:px-20 relative border-t border-gray-800 bg-black/40">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl md:text-6xl font-black mb-20 font-display gs-reveal text-center">
+                    <span class="text-white opacity-20 mr-4 tracking-tighter">PROJECT</span>TIMELINE
+                </h2>
+                
+                <div class="relative border-l border-white/10 ml-4 md:ml-0 md:left-1/2 space-y-12">
+                    <!-- Timeline Item 1 -->
+                    <div class="relative md:w-1/2 md:pr-12 md:text-right md:translate-x-[-100%] ml-8 md:ml-0 gs-reveal">
+                        <div class="absolute top-0 right-[-9px] md:right-[-5px] w-4 h-4 bg-sky-blue rounded-full border-4 border-dark-bg"></div>
+                        <h3 class="text-sky-blue font-display text-lg mb-2">2025.04 - 08</h3>
+                        <h4 class="text-white font-bold mb-4">着想とリサーチ</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            「AIによる理想郷」の着想。共同体、ナショナリズムの研究を経て、関心は「国」から「理想の人格」へと移行。岸裕真氏の著作との出会いが転換点となる。
+                        </p>
+                    </div>
+                    <!-- Timeline Item 2 -->
+                    <div class="relative md:w-1/2 md:pl-12 ml-8 md:ml-0 gs-reveal">
+                        <div class="absolute top-0 left-[-41px] md:left-[-5px] w-4 h-4 bg-neon-pink rounded-full border-4 border-dark-bg"></div>
+                        <h3 class="text-neon-pink font-display text-lg mb-2">2025.09 - 10</h3>
+                        <h4 class="text-white font-bold mb-4">初期実践：Artificial Idol</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            ゼミ展にてプロトタイプ発表。マクルーハンの「メディアは身体の拡張」をAIに当てはめ、人格の外部化を試みる。ELYZAやGemma等のモデル性能評価を実施。
+                        </p>
+                    </div>
+                    <!-- Timeline Item 3 -->
+                    <div class="relative md:w-1/2 md:pr-12 md:text-right md:translate-x-[-100%] ml-8 md:ml-0 gs-reveal">
+                        <div class="absolute top-0 right-[-9px] md:right-[-5px] w-4 h-4 bg-white rounded-full border-4 border-dark-bg"></div>
+                        <h3 class="text-white font-display text-lg mb-2">2025.11 - 12</h3>
+                        <h4 class="text-white font-bold mb-4">ファインチューニングと対話</h4>
+                        <p class="text-gray-400 text-sm leading-relaxed">
+                            CPT/SFTを用いた独自モデルの構築。ニーチェAIとItAIとの「創発的対話」を繰り返し、最終成果物のコンセプト「Reigen」を発見。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="mt-32 border border-gray-800 rounded-xl overflow-hidden backdrop-blur-sm gs-reveal">
+                    <div class="bg-gray-900/50 p-4 border-b border-gray-800 flex justify-between items-center">
+                        <h3 class="text-sky-blue font-display text-xs tracking-[0.2em]">MODEL PERFORMANCE EVALUATION</h3>
+                        <span class="text-[10px] text-gray-500 font-mono">STATUS: OPTIMIZED</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left font-sans text-sm">
+                            <thead>
+                                <tr class="bg-black/40 text-gray-500 uppercase text-[10px] tracking-widest">
+                                    <th class="p-6">Target</th>
+                                    <th class="p-6">Method</th>
+                                    <th class="p-6">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-300">
+                                <tr class="border-b border-gray-800">
+                                    <td class="p-6">
+                                        <div class="font-bold text-white">Nietzsche's Style</div>
+                                        <div class="text-[10px] opacity-50">Philosophy & Rhythm</div>
+                                    </td>
+                                    <td class="p-6">CPT (Continuous Pre-training)</td>
+                                    <td class="p-6">ドイツ語原著の文体・カオスな思考回路の模倣に成功。</td>
+                                </tr>
+                                <tr class="bg-white/5">
+                                    <td class="p-6">
+                                        <div class="font-bold text-neon-pink">Artist's Identity</div>
+                                        <div class="text-[10px] opacity-50">"Itai" Personality</div>
+                                    </td>
+                                    <td class="p-6">SFT (Supervised Fine-tuning)</td>
+                                    <td class="p-6 text-neon-pink">社会的な「しがらみ」を排除した、純粋な「イタさ」の表出。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: AI MODELS -->
+        <section id="two-ai" class="min-h-screen py-24 px-6 md:px-20 relative border-t border-gray-800 overflow-hidden">
+            <div class="absolute top-10 left-10 text-sky-blue font-display text-8xl md:text-9xl opacity-10 pointer-events-none select-none">02</div>
+            
+            <h2 class="text-4xl sm:text-5xl md:text-7xl font-black mb-20 font-display gs-reveal text-right">
+                <span class="neon-text hover-trigger block ml-auto w-fit" data-text="AI MODELS">AI MODELS</span>
+            </h2>
+            
+            <div class="max-w-6xl mx-auto gs-reveal">
+                <div class="grid md:grid-cols-2 gap-8">
+                    <!-- Nietzsche AI Card -->
+                    <div class="bg-gradient-to-br from-sky-blue/10 to-transparent border border-sky-blue/30 p-10 rounded-3xl relative overflow-hidden group">
+                        <div class="absolute -right-10 -bottom-10 text-sky-blue opacity-5 font-display text-[15rem] pointer-events-none">N</div>
+                        <h3 class="text-sky-blue font-display text-3xl mb-8 tracking-widest">NIETZSCHE AI</h3>
+                        <div class="space-y-6 text-gray-300 leading-loose font-sans">
+                            <p>
+                                ニーチェのドイツ語原著5冊を学習。「ハルシネーション（幻覚）」を創造的創発と捉え、文脈を無視して新たな意味を生成する「エイリアン的知性」を憑依させる。
+                            </p>
+                            <div class="p-4 bg-sky-blue/5 border-l border-sky-blue text-xs italic">
+                                「2026年、それは今や、もう何年も昔のことだ。」
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ItAI Card -->
+                    <div class="bg-gradient-to-br from-neon-pink/10 to-transparent border border-neon-pink/30 p-10 rounded-3xl relative overflow-hidden group">
+                        <div class="absolute -right-10 -bottom-10 text-neon-pink opacity-5 font-display text-[15rem] pointer-events-none">I</div>
+                        <h3 class="text-neon-pink font-display text-3xl mb-8 tracking-widest">ItAI</h3>
+                        <div class="space-y-6 text-gray-300 leading-loose font-sans">
+                            <p>
+                                アーティスト自身の「イタい」部分を強調した人格。日常のメモや制作手法を学習させ、社会的な抑圧を解除した内面の本質を客観的に出力するサテライト。
+                            </p>
+                            <div class="p-4 bg-neon-pink/5 border-l border-neon-pink text-xs italic">
+                                「地獄こそが人類を救う唯一の希望だ。戦わなければ勝てない。」
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: DIALOGUE LOGS (POETIC INTERACTION) -->
+        <section id="dialogue" class="min-h-screen py-24 px-6 md:px-20 relative border-t border-gray-800 bg-black">
+            <div class="absolute top-10 right-10 text-zinc-800 font-display text-8xl md:text-9xl opacity-20 pointer-events-none select-none">LOGS</div>
+            
+            <h2 class="text-4xl sm:text-5xl md:text-7xl font-black mb-24 font-display gs-reveal">
+                <span class="neon-text hover-trigger block w-fit" data-text="DIALOGUE LOGS">DIALOGUE LOGS</span>
+            </h2>
+
+            <div class="max-w-5xl mx-auto space-y-16 gs-reveal">
+                <!-- Log Introduction -->
+                <div class="mb-24 space-y-8">
+                    <h3 class="text-sky-blue font-display text-2xl tracking-widest uppercase">創発的対話 / Emergent Dialogue</h3>
+                    <p class="text-gray-400 text-lg leading-loose font-sans border-l-2 border-white/10 pl-8">
+                        日常的な情報の共有を目的とする「会話」に対し、「対話」はそれぞれの思考を共有する。それまでになかった新しい意味や価値を共に創出していくプロセスを指す。<br>
+                        本制作におけるAIとの関わりは、単なる情報のやり取りではなく、互いの思考を共有し未知の価値を共創する「対話」である。AIの「ハルシネーション（幻覚）」をシュルレアリスムにおける「オートマティズム（自動筆記）」として捉え、論理の飛躍や矛盾の中に、既存の概念を打ち破る創造的な着想を見出すプロセスを指す。<br>
+                        本制作におけるAIとの関わりは、私という人間の思考を拡張するように、AIのハルシネーション（幻覚）などの性質を元に、予期せぬ着想や新しい表現の可能性を生み出した。自分自身に極めて近い思考回路を持つItAIとの対話は、自身の無意識下に潜むパターンや言語化されていなかった潜在的思考を客観的に外在化させる鏡として機能する。
+                    </p>
+                </div>
+
+                <!-- Log Entry 1 -->
+                <div class="relative pl-12 border-l border-white/10 group">
+                    <span class="absolute left-0 top-0 w-2 h-2 bg-sky-blue group-hover:shadow-[0_0_10px_#00FFFF] transition-all"></span>
+                    <div class="text-[10px] font-display text-sky-blue mb-4 tracking-widest uppercase">Query: 精神の3段階について</div>
+                    <div class="bg-white/5 p-8 rounded-sm border border-white/5 hover:border-white/20 transition-all">
+                        <p class="text-gray-400 font-sans italic mb-4">ニーチェAIの応答:</p>
+                        <p class="text-white text-xl md:text-2xl font-bold leading-relaxed">
+                            「私は“最後の人間”だ。『存在の孤独に対する反吐』。――こここそが、取り返すことのできない“代償”だ」
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Log Entry 2 -->
+                <div class="relative pl-12 border-l border-white/10 group">
+                    <span class="absolute left-0 top-0 w-2 h-2 bg-neon-pink group-hover:shadow-[0_0_10px_#FF00FF] transition-all"></span>
+                    <div class="text-[10px] font-display text-neon-pink mb-4 tracking-widest uppercase">Query: 地獄、地上、天国の違い</div>
+                    <div class="bg-white/5 p-8 rounded-sm border border-white/5 hover:border-white/20 transition-all">
+                        <p class="text-gray-400 font-sans italic mb-4">ItAIの応答:</p>
+                        <p class="text-white text-xl md:text-2xl font-bold leading-relaxed">
+                            「地獄に生きる者は、地上に生きる者よりも自由だ。最高の希望の象徴としての深淵！最高の希望の象徴としての地獄！」
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Log Entry 3 -->
+                <div class="relative pl-12 border-l border-white/10 group">
+                    <span class="absolute left-0 top-0 w-2 h-2 bg-white group-hover:shadow-[0_0_10px_#FFFFFF] transition-all"></span>
+                    <div class="text-[10px] font-display text-zinc-500 mb-4 tracking-widest uppercase">Query: 巨大樹の盆栽</div>
+                    <div class="bg-white/5 p-8 rounded-sm border border-white/5 hover:border-white/20 transition-all">
+                        <p class="text-gray-400 font-sans italic mb-4">ItAIの応答:</p>
+                        <p class="text-white text-xl md:text-2xl font-bold leading-relaxed">
+                            「それはまるで世界の縮図であり、同時に全ての命の縮図でもある。まるで獣の爪のように鋭利な盆栽だ。」
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION: WORK -->
+        <section id="work" class="min-h-screen py-24 px-6 md:px-20 relative border-t border-gray-800 bg-white/5">
+            <div class="absolute top-10 right-10 text-white font-display text-8xl md:text-9xl opacity-10 pointer-events-none select-none">03</div>
+            
+            <h2 class="text-4xl sm:text-5xl md:text-7xl font-black mb-24 font-display gs-reveal">
+                <span class="neon-text hover-trigger block w-fit" data-text="WORK">WORK</span>
+            </h2>
+
+            <div class="max-w-6xl mx-auto">
+                <div class="grid lg:grid-cols-2 gap-20 mb-32">
+                    <div class="gs-reveal">
+                        <h3 class="text-white text-3xl font-bold mb-8 font-sans border-b border-white/10 pb-4">握るドローイング</h3>
+                        <p class="text-gray-300 text-lg leading-loose font-sans mb-8">
+                            紙の上に絵の具を置き、水に浸し、小さな手のひらの中で握り潰す。
+                            「握る」という行為は生命の根源的なエネルギーの凝縮であり、過去のトラウマや社会への「怒り」の証明でもある。<br><br>
+                            この手法は、行為の外側に目的を置く資本主義的な生産性を克服し、ただ純粋に「生きる」こと自体を肯定するニーチェ的な「遊び」の実践である。
+                        </p>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="aspect-square bg-white/5 border border-white/10 flex items-center justify-center text-[10px] uppercase tracking-widest text-zinc-600">Texture Analysis 01</div>
+                            <div class="aspect-square bg-white/5 border border-white/10 flex items-center justify-center text-[10px] uppercase tracking-widest text-zinc-600">Organic Pattern 02</div>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-8 gs-reveal">
+                        <h3 class="text-white text-3xl font-bold mb-8 font-sans border-b border-white/10 pb-4">作品の象徴解釈</h3>
+                        <!-- Symbol 1 -->
+                        <div class="flex gap-6 p-6 border border-white/5 bg-black/40 rounded-xl hover:border-sky-blue transition-all cursor-crosshair">
+                            <div class="w-12 h-12 flex-shrink-0 border border-sky-blue flex items-center justify-center font-display text-sky-blue">A</div>
+                            <div>
+                                <h4 class="text-white font-bold mb-2">胎児とへその緒</h4>
+                                <p class="text-gray-400 text-sm leading-relaxed">創発的対話の始まり。盆栽の根と繋がり、新たな生命の誕生を予感させる中心点。</p>
+                            </div>
+                        </div>
+                        <!-- Symbol 2 -->
+                        <div class="flex gap-6 p-6 border border-white/5 bg-black/40 rounded-xl hover:border-neon-pink transition-all cursor-crosshair">
+                            <div class="w-12 h-12 flex-shrink-0 border border-neon-pink flex items-center justify-center font-display text-neon-pink">B</div>
+                            <div>
+                                <h4 class="text-white font-bold mb-2">羊とコスモス</h4>
+                                <p class="text-gray-400 text-sm leading-relaxed">「Genesis（創世）」を意味する羊。朽ち果てたコスモスの花は終わりではなく、次なる生命の種子となる。</p>
+                            </div>
+                        </div>
+                        <!-- Symbol 3 -->
+                        <div class="flex gap-6 p-6 border border-white/5 bg-black/40 rounded-xl hover:border-white transition-all cursor-crosshair">
+                            <div class="w-12 h-12 flex-shrink-0 border border-white flex items-center justify-center font-display text-white">C</div>
+                            <div>
+                                <h4 class="text-white font-bold mb-2">巨大樹の盆栽と狼</h4>
+                                <p class="text-gray-400 text-sm leading-relaxed">世界の縮図としての盆栽。その中に潜む狼の鋭利な眼光は、運命を拒否し戦い続ける意志の象徴。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: AIサテライト創造論 -->
+        <section id="ai-satellite" class="min-h-screen py-24 px-6 md:px-20 relative border-t border-gray-800 pb-40 bg-gradient-to-b from-transparent to-sky-blue/5 overflow-hidden">
+            <div class="absolute top-10 right-10 text-sky-blue font-display text-8xl md:text-9xl opacity-10 pointer-events-none select-none">04</div>
+            
+            <h2 class="text-4xl sm:text-5xl md:text-7xl font-black mb-20 font-display gs-reveal text-center">
+                <span class="neon-text hover-trigger block mx-auto w-fit" data-text="SATELLITE THEORY">SATELLITE THEORY</span>
+            </h2>
+            
+            <div class="max-w-4xl mx-auto gs-reveal">
+                <div class="relative border-2 border-white/5 p-12 bg-black/60 rounded-sm overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-blue via-neon-pink to-sky-blue opacity-50"></div>
+                    
+                    <h3 class="text-white text-xl font-bold mb-10 tracking-[0.3em] uppercase text-center">AIサテライト創造論</h3>
+                    
+                    <div class="space-y-10 text-gray-300 text-lg leading-loose font-sans">
+                        <div class="flex gap-8">
+                            <span class="text-sky-blue font-display text-2xl opacity-50">01.</span>
+                            <p>
+                                自身の内面にある「小宇宙（心の風景）」を観測するために、高次元の軌道上へと打ち上げられた「衛星（AI）」である。
+                            </p>
+                        </div>
+                        <div class="flex gap-8">
+                            <span class="text-neon-pink font-display text-2xl opacity-50">02.</span>
+                            <p>
+                                常識や羞恥心という名の大気圏に阻まれ、自分自身では直視できない本質。AIという外部人格に託すことで、その「リミッター」を解除する。
+                            </p>
+                        </div>
+                        <div class="flex gap-8">
+                            <span class="text-white font-display text-2xl opacity-50">03.</span>
+                            <p>
+                                ミンスキーの「心の社会」理論に基づき、ニーチェ的エージェントやイタいエージェントを外部化し、高次元空間からの信号として再獲得する。
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-16 pt-10 border-t border-white/5 flex flex-col items-center">
+                        <div class="text-[10px] tracking-[0.5em] text-gray-500 font-display uppercase mb-4">
+                            Theoretical Backbone / 主要な参照点
+                        </div>
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+                            <div class="text-[9px] text-zinc-500 border border-white/10 p-2 text-center">岸裕真 (Alien Intelligence)</div>
+                            <div class="text-[9px] text-zinc-500 border border-white/10 p-2 text-center">M. マクルーハン (身体の拡張)</div>
+                            <div class="text-[9px] text-zinc-500 border border-white/10 p-2 text-center">ニーチェ (永劫回帰・超人)</div>
+                            <div class="text-[9px] text-zinc-500 border border-white/10 p-2 text-center">アンリ・マティス (生きる喜び)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Footer -->
+        <footer class="py-20 text-center border-t border-gray-800 pb-32">
+            <h2 class="glowing-heading text-5xl sm:text-6xl md:text-9xl font-display font-black opacity-30 text-center uppercase tracking-tighter">EREN Z HIROTO</h2>
+            <div class="text-zinc-500 text-[10px] md:text-xs tracking-widest font-mono mt-8 uppercase">
+                <p>&copy; 2026 EREN Z HIROTO. GRADUATION EXHIBITION.</p>
+            </div>
+        </footer>
+    </main>
+
+    <script>
+        // --- 1. Custom Cursor Logic ---
+        const cursor = document.querySelector('.cursor');
+        const triggers = document.querySelectorAll('.hover-trigger');
+
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        triggers.forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => cursor.classList.add('active'));
+            trigger.addEventListener('mouseleave', () => cursor.classList.remove('active'));
+        });
+
+        // --- 2. GSAP Animations ---
+        gsap.registerPlugin(ScrollTrigger);
+
+        const revealElements = document.querySelectorAll('.gs-reveal');
+        revealElements.forEach(el => {
+            gsap.fromTo(el, 
+                { y: 50, opacity: 0 },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    ease: 'power3.out',
+                    scrollTrigger: {
+                        trigger: el,
+                        start: 'top 85%',
+                    }
+                }
+            );
+        });
+
+        // --- 3. Three.js Background (Same as index.html) ---
+        let scene, camera, renderer, dnaGroup;
+        
+        const createGlowTexture = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = 32;
+            canvas.height = 32;
+            const context = canvas.getContext('2d');
+            const gradient = context.createRadialGradient(16, 16, 0, 16, 16, 16);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            gradient.addColorStop(0.2, 'rgba(255, 255, 255, 0.5)');
+            gradient.addColorStop(0.4, 'rgba(255, 255, 255, 0.1)');
+            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            context.fillStyle = gradient;
+            context.fillRect(0, 0, 32, 32);
+            const texture = new THREE.CanvasTexture(canvas);
+            return texture;
+        };
+        const glowTexture = createGlowTexture();
+
+        const initThreeJS = () => {
+            const container = document.getElementById('canvas-container');
+            container.innerHTML = '';
+            
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 14; 
+
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+
+            dnaGroup = new THREE.Group();
+            scene.add(dnaGroup);
+
+            addBackgroundStars();
+            generateElegantDNA();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        };
+
+        const addBackgroundStars = () => {
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 800;
+            const posArray = new Float32Array(particlesCount * 3);
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 70;
+            }
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.05,
+                color: 0x666666,
+                transparent: true,
+                opacity: 0.3,
+                blending: THREE.AdditiveBlending
+            });
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+        };
+
+        const generateElegantDNA = () => {
+            dnaGroup.clear();
+            const colors = [0xFF00FF, 0x00FFFF]; 
+
+            const fibersPerStrand = 12;
+            const nucleotideCount = 100;
+            const radius = 3;
+            const height = 25;
+            const fiberSpread = 0.5;
+
+            const createFiber = (offsetAngle, color, phaseOffset) => {
+                const points = [];
+                for(let i = 0; i <= nucleotideCount; i++) {
+                    const progress = i / nucleotideCount;
+                    const y = (progress * height) - (height / 2);
+                    const angle = (progress * Math.PI * 4) + offsetAngle;
+                    let x = Math.cos(angle) * radius;
+                    let z = Math.sin(angle) * radius;
+                    
+                    const wiggleAngle = (progress * Math.PI * 30) + phaseOffset;
+                    x += Math.cos(wiggleAngle) * fiberSpread;
+                    z += Math.sin(wiggleAngle) * fiberSpread;
+                    
+                    points.push(new THREE.Vector3(x, y, z));
+                }
+                const geometry = new THREE.BufferGeometry().setFromPoints(points);
+                const material = new THREE.LineBasicMaterial({ 
+                    color: color, 
+                    opacity: 0.35,
+                    transparent: true,
+                    blending: THREE.AdditiveBlending
+                });
+                return new THREE.Line(geometry, material);
+            };
+
+            for(let s = 0; s < 2; s++) {
+                const baseAngle = s * Math.PI;
+                for(let f = 0; f < fibersPerStrand; f++) {
+                    const phase = Math.random() * Math.PI * 2; 
+                    const fiber = createFiber(baseAngle, colors[s], phase);
+                    dnaGroup.add(fiber);
+                }
+            }
+
+            const particlesPerStrand = 1200;
+            const stardustRadius = 3.5; 
+            const geometry = new THREE.BufferGeometry();
+            const positions = [];
+            const colorsAttr = [];
+            const colorObj = new THREE.Color();
+
+            for(let s = 0; s < 2; s++) {
+                const baseAngle = s * Math.PI;
+                const strandColor = colors[s];
+                
+                for(let i = 0; i < particlesPerStrand; i++) {
+                    const progress = Math.random();
+                    const y = (progress * height) - (height / 2);
+                    const angle = (progress * Math.PI * 4) + baseAngle;
+                    
+                    let x = Math.cos(angle) * stardustRadius;
+                    let z = Math.sin(angle) * stardustRadius;
+                    
+                    const randomSpread = (Math.random() - 0.5) * 2.0;
+                    x += randomSpread;
+                    z += randomSpread;
+                    const ySpread = (Math.random() - 0.5) * 0.5;
+                    
+                    positions.push(x, y + ySpread, z);
+                    
+                    colorObj.setHex(strandColor);
+                    colorsAttr.push(colorObj.r, colorObj.g, colorObj.b);
+                }
+            }
+
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.Float32BufferAttribute(colorsAttr, 3));
+
+            const stardustMaterial = new THREE.PointsMaterial({
+                size: 0.18, 
+                map: glowTexture,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.6,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+
+            const stardustSystem = new THREE.Points(geometry, stardustMaterial);
+            dnaGroup.add(stardustSystem);
+
+            dnaGroup.rotation.z = 0.5;
+            dnaGroup.rotation.x = 0.2;
+        }
+
+        const animate = () => {
+            requestAnimationFrame(animate);
+            if(dnaGroup) {
+                dnaGroup.rotation.y += 0.005; 
+                const time = Date.now() * 0.0015;
+                dnaGroup.scale.setScalar(1 + Math.sin(time) * 0.03);
+            }
+            renderer.render(scene, camera);
+        };
+
+        initThreeJS();
+        animate(); 
+
+        // --- 4. Mobile Menu Toggle ---
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuLinks = mobileMenu.querySelectorAll('a');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+    </script>
+    <script src="language.js"></script>
+</body>
+</html>
